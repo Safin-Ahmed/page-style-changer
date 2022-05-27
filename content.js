@@ -4,12 +4,20 @@ const divs = document.getElementsByTagName("div");
 
 const getStorageData = () => {
   const getData = localStorage.getItem("fontSize");
-  const finalData = JSON.parse(getData);
-
-  return finalData.fontSize;
+  if (!getData) {
+    localStorage.setItem("fontSize", JSON.stringify({ fontSize: 0 }));
+  } else if (getData) {
+    const finalData = JSON.parse(getData);
+    const fontSize = finalData.fontSize;
+    return fontSize;
+  }
 };
 
-console.log(getStorageData());
+chrome.runtime.sendMessage({
+  type: "from_content",
+  size: getStorageData(),
+  domain: document.location.origin,
+});
 
 chrome.runtime.onMessage.addListener((req, sender, res) => {
   if (req.fontSize) {
@@ -29,10 +37,10 @@ chrome.runtime.onMessage.addListener((req, sender, res) => {
 
     localStorage.setItem("fontSize", JSON.stringify(localStorageData));
 
-    chrome.storage.sync.set({ fontSize: getStorageData() }, () => {
-      console.log("Storage Set!");
-
-      res({ fontSize: getStorageData() });
+    chrome.runtime.sendMessage({
+      type: "from_content",
+      size: getStorageData(),
+      domain: document.location.origin,
     });
   }
 });
