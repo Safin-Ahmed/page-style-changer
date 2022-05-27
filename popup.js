@@ -21,7 +21,9 @@ chrome.runtime.sendMessage({ type: "from_popup" }, (response) => {
 
 let fontSizeValue;
 
-[("change", "keyup")].forEach((ev) => {
+const events = ["change", "keyup"];
+
+events.forEach((ev) => {
   fontSizeInput.addEventListener(ev, () => {
     fontSizeValue = fontSizeInput.value;
   });
