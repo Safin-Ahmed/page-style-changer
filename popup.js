@@ -1,4 +1,11 @@
 const fontSizeInput = document.getElementById("fontSize");
+chrome.storage.sync.get("fontSize", (style) => {
+  if (style.fontSize) {
+    fontSizeInput.value = style.fontSize;
+  } else {
+    fontSizeInput.value = "";
+  }
+});
 let fontSizeValue;
 
 ["change", "keyup"].forEach((ev) => {

@@ -15,5 +15,9 @@ chrome.runtime.onMessage.addListener((req, sender, res) => {
     for (let div of divs) {
       div.style.fontSize = `${req.fontSize}px`;
     }
+
+    chrome.storage.sync.set({ fontSize: req.fontSize }, () => {
+      console.log("Storage Set!");
+    });
   }
 });
